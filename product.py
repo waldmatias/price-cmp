@@ -94,11 +94,14 @@ def get_db():
     }
 
 
-def fetch_product(source, product_key, store_key):
-    product = source['products'][product_key]
-    pid = product['supplier_id']
-    base_url = source['base_url']
-    return open_url(base_url.format(pid, store_key))
+def fetch_product_wwwpage(source, product_key, store_key):
+    try:
+        product = source['products'][product_key]
+        pid = product['supplier_id']
+        base_url = source['base_url']
+        return open_url(base_url.format(pid, store_key))
+    except KeyError:
+        pass
 
 
 def fetch_product_pricing(product_key):
@@ -115,24 +118,26 @@ def fetch_product_pricing(product_key):
 
     for site, store in sites:
         src = db[site]
-        wwwpage = fetch_product(src, product_key, store)
-        info.append([
-            src['name'], src['desc-parser'](wwwpage), src['price-parser'](wwwpage)
-        ])
+        wwwpage = fetch_product_wwwpage(src, product_key, store)
+
+        if(wwwpage):    
+            info.append([
+                src['name'], src['desc-parser'](wwwpage), src['price-parser'](wwwpage)
+            ])
 
     return info
 
 
 def print_view(price_list):
     for source, product, price in price_list:
-        print(f'{source.upper():>20} : {product:<40} : Bs. {price:<10,.2f}')
+        print(f'{source.upper():>20} : {product:<50} : Bs. {price:<10,.2f}')
 
 
 def print_cheapest_view(price_list):
     # item[2] is price
     source, _, price = min(price_list, key=lambda item: item[2])
     print('-' * 20)
-    print(f'cheapest price at: {source.upper()} and is: Bs. {price:,.2f}')
+    print(f'cheapest price at: {source.upper()}, Bs. {price:,.2f}')
 
 
 if __name__ == '__main__':
