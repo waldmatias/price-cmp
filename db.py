@@ -28,7 +28,8 @@ def get_db():
                     'store_id' : '1013'
                 },
                 'arroz-mary-tradicional-kg': {
-                    'supplier_id': '16001524'
+                    'supplier_id': '16001524', 
+                    'store_id' : '1013'
                 },
             },            
         },
