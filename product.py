@@ -109,9 +109,8 @@ def fetch_products():
 
     # plaza
     src = 'plazas'
-    #pid = '10003139'
-    #suc = '1013' #centro plaza
-    s = fetch_product_by_store(db, src, '1013', product_key)
+    suc = '1013' #centro plaza
+    s = fetch_product_by_store(db, src, suc, product_key)
     # s = open_url(db['plazas']['base_url'].format(pid, suc))
     info.append([
         src,
@@ -120,11 +119,11 @@ def fetch_products():
     ])
 
     # cm
-    pid = 'agua-nevada-5lt'
+    src = 'cm'
     suc = 'distrito-capital-06'
-    s = open_url(db['cm']['base_url'].format(pid, suc))
+    s = fetch_product_by_store(db, src, suc, product_key)
     info.append([
-        'cm', 
+        src, 
         s.select('h2.product_title')[-1].text.strip(), 
         convert_price('Bs', s.select('p.price bdi')[-1].text)
     ])
@@ -132,8 +131,6 @@ def fetch_products():
     # farmatodo
     src = 'farmatodo'
     s = fetch_product_by_key(db, src, product_key)
-    #pid = '111240637'
-    #s = open_url(db['farmatodo']['base_url'].format(pid))
     info.append([
         src, 
         s.find('p', {'class':'description'}).text.strip(), 
