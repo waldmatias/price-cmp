@@ -89,6 +89,12 @@ def fetch_product_by_store(db, source_name, store_id, key):
     base_url = db.get(source_name).get('base_url')
     return open_url(base_url.format(pid, store_id))
 
+def fetch_product(db, source_name, product_key, store_key):
+    product = get_db_product(source_name, product_key)
+    pid = product.get('supplier_id')
+    base_url = db.get(source_name).get('base_url')
+    return open_url(base_url.format(pid, store_key))
+
 
 def fetch_products():
     info = []
@@ -99,8 +105,8 @@ def fetch_products():
     # gama
     src = 'gama'
     # source, description, price = fetch_product(db, src, 'nevada-5l')
-    # info.append([source, desription, price])
-    s = fetch_product_by_key(db, src, product_key)
+    # info.append([source, description, price])
+    s = fetch_product(db, src, product_key, None)
     info.append([
         src, 
         s.find('div', {'class':'name'}).text.strip(), 
@@ -109,8 +115,8 @@ def fetch_products():
 
     # plaza
     src = 'plazas'
-    suc = '1013' #centro plaza
-    s = fetch_product_by_store(db, src, suc, product_key)
+    store = '1013' #centro plaza
+    s = fetch_product(db, src, product_key, store)
     # s = open_url(db['plazas']['base_url'].format(pid, suc))
     info.append([
         src,
@@ -120,8 +126,8 @@ def fetch_products():
 
     # cm
     src = 'cm'
-    suc = 'distrito-capital-06'
-    s = fetch_product_by_store(db, src, suc, product_key)
+    store = 'distrito-capital-06'
+    s = fetch_product(db, src, product_key, store)
     info.append([
         src, 
         s.select('h2.product_title')[-1].text.strip(), 
@@ -130,7 +136,7 @@ def fetch_products():
 
     # farmatodo
     src = 'farmatodo'
-    s = fetch_product_by_key(db, src, product_key)
+    s = fetch_product(db, src, product_key, None)
     info.append([
         src, 
         s.find('p', {'class':'description'}).text.strip(), 
@@ -139,9 +145,7 @@ def fetch_products():
 
     return info
 
-if __name__ == '__main__':
-    print(f'Fetching prices ...')
-    product_list = fetch_products()
+def print_view(product_list):
     for source, product, price in product_list:
         print(f'{source.upper():>10} : {product:<40} : Bs. {price:<10,.2f}')
     
@@ -149,3 +153,9 @@ if __name__ == '__main__':
     source, _, price = min(product_list, key=lambda item: item[2])
     print('-' * 10)
     print(f'cheapest price is at: {source.upper()} and its price is: Bs. {price:,.2f}')
+
+
+if __name__ == '__main__':
+    print(f'Fetching prices ...')
+    products = fetch_products()
+    print_view(products)
