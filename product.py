@@ -35,48 +35,61 @@ def get_db():
         'gama' : {
             'name' : 'Excelsior Gama',
             'base_url' : 'https://compraenlinea.excelsiorgama.com/p/{0}',
+            'desc-parser': lambda page: page.find('div', {'class':'name'}).text.strip(),
+            'price-parser': lambda page: convert_price('Bs', page.find('div', {'class':'from-price-value'}).text),
             'products' : {
                 'nevada-5l': {
                     'supplier_id': '10000746'
                 },
-            },
-            'desc-parser': lambda page: page.find('div', {'class':'name'}).text.strip(),
-            'price-parser': lambda page: convert_price('Bs', page.find('div', {'class':'from-price-value'}).text),
+                'arroz-mary-tradicional-kg': {
+                    'supplier_id': '10029311'
+                },
+            },            
         },
         'plazas' : {
             'name' : 'El Plazas',
             'base_url' : 'https://www.elplazas.com/Product.php?code={0}&suc={1}',
+            'desc-parser': lambda page: page.find('div', {'class':'ProductName'}).text.strip(),
+            'price-parser': lambda page: D((page.select('span#productprice.Moneda')[-1].text).replace(',' , '')),  #digit formatting different ,.,
             'products' : {
                 'nevada-5l': {
                     'supplier_id': '10003139', 
                     'store_id' : '1013'
-                }
-            },
-            'desc-parser': lambda page: page.find('div', {'class':'ProductName'}).text.strip(),
-            'price-parser': lambda page: D((page.select('span#productprice.Moneda')[-1].text).replace(',' , '')),  #digit formatting different ,.,
+                },
+                'arroz-mary-tradicional-kg': {
+                    'supplier_id': '16001524'
+                },
+            },            
         },
         'cm' : {
             'name' : 'Central Madeirense',
             'base_url' : 'https://tucentralonline.com/{1}/producto/{0}/', #non-numeric, alpha-key
+            'desc-parser': lambda page: page.select('h2.product_title')[-1].text.strip(),
+            'price-parser': lambda page: convert_price('Bs', page.select('p.price bdi')[-1].text),
             'products' : {
                 'nevada-5l': {
                     'supplier_id': 'agua-nevada-5lt', 
                     'store_id' : 'distrito-capital-06'
-                }
-            },
-            'desc-parser': lambda page: page.select('h2.product_title')[-1].text.strip(),
-            'price-parser': lambda page: convert_price('Bs', page.select('p.price bdi')[-1].text)
+                },
+                'arroz-mary-tradicional-kg': {
+                    'supplier_id': 'arroz-mary-tipo1tradicional-1kg', 
+                    'store_id' : 'distrito-capital-06'
+                },
+            },            
         },
         'farmatodo' : {
             'name' : 'Farmatodo',
             'base_url' : 'https://farmatodo.com.ve/producto/{0}',
+            'desc-parser': lambda page: page.find('p', {'class':'description'}).text.strip(), 
+            'price-parser': lambda page: convert_price('Bs.', page.find('p', {'class':'p-blue'}).text.strip()),
             'products' : { 
                 'nevada-5l': {
                     'supplier_id': '111240637'
-                }, 
+                },
+                'arroz-mary-tradicional-kg': {
+                    'supplier_id': '112084350', 
+                },
             },
-            'desc-parser': lambda page: page.find('p', {'class':'description'}).text.strip(), 
-            'price-parser': lambda page: convert_price('Bs.', page.find('p', {'class':'p-blue'}).text.strip())
         },
     }
 
@@ -88,7 +101,7 @@ def fetch_product(source, product_key, store_key):
     return open_url(base_url.format(pid, store_key))
 
 
-def fetch_products(product_key):
+def fetch_product_pricing(product_key):
     info = []
 
     db = get_db()
@@ -110,19 +123,26 @@ def fetch_products(product_key):
     return info
 
 
-def print_view(product_list):
-    for source, product, price in product_list:
+def print_view(price_list):
+    for source, product, price in price_list:
         print(f'{source.upper():>20} : {product:<40} : Bs. {price:<10,.2f}')
-    
+
+
+def print_cheapest_view(price_list):
     # item[2] is price
-    source, _, price = min(product_list, key=lambda item: item[2])
+    source, _, price = min(price_list, key=lambda item: item[2])
     print('-' * 20)
     print(f'cheapest price at: {source.upper()} and is: Bs. {price:,.2f}')
 
 
 if __name__ == '__main__':
-    product_key = 'nevada-5l'
+    product_list = [
+        'nevada-5l',
+        'arroz-mary-tradicional-kg'
+    ]
 
-    print(f'Fetching prices for {product_key} ...')
-    products = fetch_products(product_key)
-    print_view(products)
+    for product_key in product_list:
+        print(f'Fetching prices for {product_key} ...')
+        price_list = fetch_product_pricing(product_key)
+        print_view(price_list)
+        print_cheapest_view(price_list)
