@@ -37,6 +37,8 @@ def get_db():
             'products' : {
                 'nevada-5l': {'supplier_id': '10000746'},
             },
+            'desc-parser': lambda page: page.find('div', {'class':'name'}).text.strip(),
+            'price-parser': lambda page: convert_price('Bs', page.find('div', {'class':'from-price-value'}).text),
         },
         'plazas' : {
             'name' : 'El Plazas',
@@ -70,27 +72,14 @@ def get_db():
     }
 
 
-def get_db_product(source_name, key):
-    source = get_db().get(source_name)
+def get_db_product(db, source_name, key):
+    source = db.get(source_name)
     product = source.get('products').get(key)
     return product
 
 
-def fetch_product_by_key(db, source_name, key):
-    product = get_db_product(source_name, key)
-    pid = product.get('supplier_id')
-    base_url = db.get(source_name).get('base_url')
-    return open_url(base_url.format(pid))
-    
-
-def fetch_product_by_store(db, source_name, store_id, key):
-    product = get_db_product(source_name, key)
-    pid = product.get('supplier_id')
-    base_url = db.get(source_name).get('base_url')
-    return open_url(base_url.format(pid, store_id))
-
 def fetch_product(db, source_name, product_key, store_key):
-    product = get_db_product(source_name, product_key)
+    product = get_db_product(db, source_name, product_key)
     pid = product.get('supplier_id')
     base_url = db.get(source_name).get('base_url')
     return open_url(base_url.format(pid, store_key))
@@ -108,9 +97,7 @@ def fetch_products():
     # info.append([source, description, price])
     s = fetch_product(db, src, product_key, None)
     info.append([
-        src, 
-        s.find('div', {'class':'name'}).text.strip(), 
-        convert_price('Bs', s.find('div', {'class':'from-price-value'}).text)
+        src, db[src]['desc-parser'](s), db[src]['price-parser'](s)        
     ])
 
     # plaza
