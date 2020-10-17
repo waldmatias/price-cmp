@@ -29,33 +29,100 @@ def convert_price(prefix, text):
     return parse_rate(string_rateparser(prefix, text))
 
 
+def get_db():
+    return {
+        'gama' : {
+            'name' : 'Excelsior Gama',
+            'base_url' : 'https://compraenlinea.excelsiorgama.com/p/{0}',
+            'products' : {
+                'nevada-5l': {'supplier_id': '10000746'},
+            },
+        },
+        'plazas' : {
+            'name' : 'El Plazas',
+            'base_url' : 'https://www.elplazas.com/Product.php?code={0}&suc={1}',
+            'products' : {
+                'nevada-5l': {
+                    'supplier_id': '10003139', 
+                    'store_id' : '1013'
+                }
+            }
+        },
+        'cm' : {
+            'name' : 'Central Madeirense',
+            'base_url' : 'https://tucentralonline.com/{1}/producto/{0}/', #non-numeric, alpha-key
+            'products' : {
+                'nevada-5l': {
+                    'supplier_id': 'agua-nevada-5lt', 
+                    'store_id' : 'distrito-capital-06'
+                }
+            }
+        },
+        'farmatodo' : {
+            'name' : 'Farmatodo',
+            'base_url' : 'https://farmatodo.com.ve/producto/{0}',
+            'products' : { 
+                'nevada-5l': {
+                    'supplier_id': '111240637'
+                }, 
+            }
+        },
+    }
+
+
+def get_db_product(source_name, key):
+    source = get_db().get(source_name)
+    product = source.get('products').get(key)
+    return product
+
+
+def fetch_product_by_key(db, source_name, key):
+    product = get_db_product(source_name, key)
+    pid = product.get('supplier_id')
+    base_url = db.get(source_name).get('base_url')
+    return open_url(base_url.format(pid))
+    
+
+def fetch_product_by_store(db, source_name, store_id, key):
+    product = get_db_product(source_name, key)
+    pid = product.get('supplier_id')
+    base_url = db.get(source_name).get('base_url')
+    return open_url(base_url.format(pid, store_id))
+
+
 def fetch_products():
     info = []
+
+    db = get_db()
+    product_key = 'nevada-5l'
+
     # gama
-    pid = '10000746'
-    url = f'https://compraenlinea.excelsiorgama.com/p/{pid}'
-    #'https://compraenlinea.excelsiorgama.com/BEBIDAS/Aguas-y-Gaseosas/Aguas/AGUA-MINERAL-NEVADA-5-LT/p/10000746'
-    s = open_url(url)
+    src = 'gama'
+    # source, description, price = fetch_product(db, src, 'nevada-5l')
+    # info.append([source, desription, price])
+    s = fetch_product_by_key(db, src, product_key)
     info.append([
-        'gama', 
-        s.find('div', {'class':'name'}).text, 
+        src, 
+        s.find('div', {'class':'name'}).text.strip(), 
         convert_price('Bs', s.find('div', {'class':'from-price-value'}).text)
     ])
 
     # plaza
-    pid = '10003139'
-    suc = '1013' #centro plaza
-    url = f'https://www.elplazas.com/Product.php?code={pid}&suc={suc}'
-    s = open_url(url)
+    src = 'plazas'
+    #pid = '10003139'
+    #suc = '1013' #centro plaza
+    s = fetch_product_by_store(db, src, '1013', product_key)
+    # s = open_url(db['plazas']['base_url'].format(pid, suc))
     info.append([
-        'plaza', 
+        src,
         s.find('div', {'class':'ProductName'}).text.strip(), 
         D((s.select('span#productprice.Moneda')[-1].text).replace(',' , ''))  #digit formatting different ,.
     ])
 
     # cm
-    url = 'https://tucentralonline.com/distrito-capital-06/producto/agua-nevada-5lt/'
-    s = open_url(url)
+    pid = 'agua-nevada-5lt'
+    suc = 'distrito-capital-06'
+    s = open_url(db['cm']['base_url'].format(pid, suc))
     info.append([
         'cm', 
         s.select('h2.product_title')[-1].text.strip(), 
@@ -63,11 +130,12 @@ def fetch_products():
     ])
 
     # farmatodo
-    pid = '111240637'
-    url = f'https://farmatodo.com.ve/producto/{pid}'
-    s = open_url(url)
+    src = 'farmatodo'
+    s = fetch_product_by_key(db, src, product_key)
+    #pid = '111240637'
+    #s = open_url(db['farmatodo']['base_url'].format(pid))
     info.append([
-        'farmatodo', 
+        src, 
         s.find('p', {'class':'description'}).text.strip(), 
         convert_price('Bs.', s.find('p', {'class':'p-blue'}).text.strip())
     ])
