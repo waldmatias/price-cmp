@@ -59,7 +59,8 @@ def print_cheapest_view(price_list):
 if __name__ == '__main__':
     product_list = [
         'nevada-5l',
-        'arroz-mary-tradicional-kg'
+        'arroz-mary-tradicional-kg',
+        'crustissimo-650gr',
     ]
 
     for product_key in product_list:

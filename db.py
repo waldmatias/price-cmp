@@ -11,6 +11,9 @@ def get_db_products():
                 'arroz-mary-tradicional-kg': {
                     'supplier_id': '10029311'
                 },
+                'crustissimo-650gr': {
+                    'supplier_id': '10029867'
+                }
             }
         },
         'plazas' : {
@@ -23,6 +26,10 @@ def get_db_products():
                     'supplier_id': '16001524', 
                     'store_id' : '1013'
                 },
+                'crustissimo-650gr': {
+                    'supplier_id': '10013034', 
+                    'store_id' : '1013'
+                }
             },  
         },
         'cm' : {
@@ -35,6 +42,10 @@ def get_db_products():
                     'supplier_id': 'arroz-mary-tipo1tradicional-1kg', 
                     'store_id' : 'distrito-capital-06'
                 },
+                'crustissimo-650gr': {
+                    'supplier_id': 'pan-crustissimo-sandwich-blanco-650gr', 
+                    'store_id' : 'distrito-capital-06'
+                }
             },    
         },
         'farmatodo' : {
@@ -45,6 +56,9 @@ def get_db_products():
                 'arroz-mary-tradicional-kg': {
                     'supplier_id': '112084350', 
                 },
+                'crustissimo-650gr': {
+                    'supplier_id': '111964031', 
+                }
             },
         },
     }
