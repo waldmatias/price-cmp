@@ -46,7 +46,7 @@ def fetch_product_pricing(product_key):
 
 def print_view(price_list):
     for source, product, price in price_list:
-        print(f'{source.upper():>20} : {product:<50} : Bs. {price:<10,.2f}')
+        print(f'{source.upper():>20} : {product.lower():<50} : Bs. {price:<10,.2f}')
 
 
 def print_cheapest_view(price_list):
