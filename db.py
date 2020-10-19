@@ -1,5 +1,6 @@
 from decimal import Decimal as D
 from parseutils import convert_price
+import json
 
 def db_products():
     # get these from a json file

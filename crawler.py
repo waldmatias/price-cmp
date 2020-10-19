@@ -3,12 +3,18 @@ from bs4 import BeautifulSoup
 from decimal import Decimal as D
 from db import get_db
 
+
+def log(e):
+    """
+        logging
+    """
+    pass
+
 def open_url(url):
     """
         open url strategy, also handles redirects automatically
     """
     return BeautifulSoup(urlopen(url),'html.parser')
-
 
 def fetch_product_wwwpage(source, product_key, store_key):
     try:
@@ -16,8 +22,8 @@ def fetch_product_wwwpage(source, product_key, store_key):
         pid = product['supplier_id']
         base_url = source['base_url']
         return open_url(base_url.format(pid, store_key))
-    except KeyError:
-        pass
+    except KeyError as e:
+        log(e)
 
 
 def fetch_product_pricing(product_key):
@@ -52,6 +58,8 @@ def print_view(price_list):
 def print_cheapest_view(price_list):
     # item[2] is price
     source, _, price = min(price_list, key=lambda item: item[2])
+    # build comparison line, sort, min to max
+    # min < n1 < n2 < ... < max
     print('-' * 20)
     print(f'cheapest price at: {source.upper()}, Bs. {price:,.2f}')
 
