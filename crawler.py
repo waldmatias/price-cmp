@@ -51,7 +51,7 @@ def fetch_product_pricing(product_key):
 
 
 def print_view(price_list):
-    for source, product, price in price_list:
+    for source, product, price in sorted(price_list, key=lambda item: item[2], reverse=True):
         print(f'{source.upper():>20} : {product.lower():<50} : Bs. {price:<10,.2f}')
 
 
@@ -61,18 +61,18 @@ def print_cheapest_view(price_list):
     # build comparison line, sort, min to max
     # min < n1 < n2 < ... < max
     print('-' * 20)
-    print(f'cheapest price at: {source.upper()}, Bs. {price:,.2f}')
+    print(f'cheapest price Bs. {price:,.2f} at {source.upper()}')
 
 
 if __name__ == '__main__':
-    product_list = [
+    products_to_search = [
         'nevada-5l',
         'arroz-mary-tradicional-kg',
         'crustissimo-650gr',
     ]
 
-    for product_key in product_list:
-        print(f'Fetching prices for {product_key} ...')
-        price_list = fetch_product_pricing(product_key)
+    for product in products_to_search:
+        print(f'Fetching prices for {product} ...')
+        price_list = fetch_product_pricing(product)
         print_view(price_list)
         print_cheapest_view(price_list)
