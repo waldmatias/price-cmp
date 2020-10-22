@@ -3,67 +3,11 @@ from parseutils import convert_price
 import json
 
 def db_products():
-    # get these from a json file
-    return {
-        'gama': {
-            'products': {
-                'nevada-5l': { 
-                    'supplier_id': '10000746'
-                },
-                'arroz-mary-tradicional-kg': {
-                    'supplier_id': '10029311'
-                },
-                'crustissimo-650gr': {
-                    'supplier_id': '10029867'
-                }
-            }
-        },
-        'plazas' : {
-            'products' : {
-                'nevada-5l': {
-                    'supplier_id': '10003139', 
-                    'store_id' : '1013'
-                },
-                'arroz-mary-tradicional-kg': {
-                    'supplier_id': '16001524', 
-                    'store_id' : '1013'
-                },
-                'crustissimo-650gr': {
-                    'supplier_id': '10013034', 
-                    'store_id' : '1013'
-                }
-            },  
-        },
-        'cm' : {
-            'products' : {
-                'nevada-5l': {
-                    'supplier_id': 'agua-nevada-5lt', 
-                    'store_id' : 'distrito-capital-06'
-                },
-                'arroz-mary-tradicional-kg': {
-                    'supplier_id': 'arroz-mary-tipo1tradicional-1kg', 
-                    'store_id' : 'distrito-capital-06'
-                },
-                'crustissimo-650gr': {
-                    'supplier_id': 'pan-crustissimo-sandwich-blanco-650gr', 
-                    'store_id' : 'distrito-capital-06'
-                }
-            },    
-        },
-        'farmatodo' : {
-            'products' : { 
-                'nevada-5l': {
-                    'supplier_id': '111240637'
-                },
-                'arroz-mary-tradicional-kg': {
-                    'supplier_id': '112084350', 
-                },
-                'crustissimo-650gr': {
-                    'supplier_id': '111964031', 
-                }
-            },
-        },
-    }
+    try:
+        with open('products.json','r') as f:
+            return json.load(f)
+    except Exception as e:
+        print(f'{e}')
 
 
 def db_sources():
