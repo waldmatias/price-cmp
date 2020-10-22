@@ -61,14 +61,15 @@ def print_cheapest_view(price_list):
     # build comparison line, sort, min to max
     # min < n1 < n2 < ... < max
     print('-' * 20)
-    print(f'cheapest price Bs. {price:,.2f} at {source.upper()}')
+    print(f'CHEAPEST: Bs. {price:,.2f} at {source.upper()}')
 
 
 if __name__ == '__main__':
     products_to_search = [
+        #'huggies-rn',
         'nevada-5l',
-        'arroz-mary-tradicional-kg',
-        'crustissimo-650gr',
+        #'arroz-mary-tradicional-kg',
+        #'crustissimo-650gr',
     ]
 
     for product in products_to_search:
