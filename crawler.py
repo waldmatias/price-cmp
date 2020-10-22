@@ -3,6 +3,7 @@ from urllib.request import urlopen
 from bs4 import BeautifulSoup
 from decimal import Decimal as D
 from db import get_db
+import sys
 
 
 def log(e):
@@ -66,12 +67,15 @@ def print_cheapest_view(price_list):
 
 
 if __name__ == '__main__':
-    products_to_search = [
-        #'huggies-rn',
-        'nevada-5l',
-        #'arroz-mary-tradicional-kg',
-        #'crustissimo-650gr',
-    ]
+    if sys.argv[1]:
+        products_to_search = [sys.argv[1]]
+    else:
+        products_to_search = [
+            #'huggies-rn',
+            #'nevada-5l',
+            #'arroz-mary-tradicional-kg',
+            #'crustissimo-650gr',
+        ]
 
     for product in products_to_search:
         print(f'Fetching prices for {product} ...')

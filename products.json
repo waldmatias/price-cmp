@@ -12,6 +12,15 @@
             },
             "huggies-rn": {
                 "supplier_id": "50013667"
+            },
+            "huggies-xg": {
+                "supplier_id": "50013616"
+            },
+            "huggies-wipes-48": { 
+                "supplier_id": "50008592"
+            },
+            "huggies-wipes-80": { 
+                "supplier_id": "50013626"
             }
         }
     },
@@ -28,6 +37,12 @@
             "crustissimo-650gr": {
                 "supplier_id": "10013034",
                 "store_id": "1013"
+            },
+            "huggies-wipes-48": { 
+                "supplier_id": "60000138"
+            },
+            "huggies-wipes-80": { 
+                "supplier_id": "60002062"
             }
         }
     },
@@ -60,6 +75,15 @@
             },
             "huggies-rn": {
                 "supplier_id": "112012356"
+            },
+            "huggies-xg": {
+                "supplier_id": "111958247"
+            },
+            "huggies-wipes-48": { 
+                "supplier_id": "111035193"
+            },
+            "huggies-wipes-80": { 
+                "supplier_id": "111974880"
             }
         }
     }
