@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
 from decimal import Decimal as D
