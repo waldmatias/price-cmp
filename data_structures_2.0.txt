@@ -1,0 +1,49 @@
+// ALL products db
+products
+    "nevada-5l"
+        description // standardized product description
+        shops
+            shop, pid
+            shop, pid
+            shop, pid
+
+> products.get_product(product_name)
+> products.get_prices(product_name)
+> products.get_price(product_name, shop_name)
+
+
+// a single store/shop www descriptor
+shop
+    name
+    base-url
+    parser
+        product-supplier-id
+        product-description
+        product-price
+
+
+// this is a capture for a single product
+price-snapshot // ascending
+    capture-datetime-span // capture process takes a while
+        datetime-start
+        datetime-end
+        duration
+    prices
+        shop, price, capture-datetime // when was this particular price captured? 
+        shop, price, capture-datetime
+        shop, price, capture-datetime
+
+> price_snapshot.create(product_name) // capture prices from all sources for a particular product
+> price_snapshot.get_capture_duration() // how long did it take to capture this?
+
+
+// diff for a single product for a single shop
+price-delta
+    shop
+    previous-price
+    current-price
+    datetime-span // from prev to current how long has it been?
+    indicators
+        diff-tick (up|down) // cannot be =, since if = it is not a delta
+        diff-price (current - prev)
+
