@@ -20,13 +20,15 @@ def db_sources():
         },
         'plazas' : {
             'name' : 'El Plazas',
-            'base_url' : 'https://www.elplazas.com/Product.php?code={0}&suc={1}',
+            #'base_url' : 'https://www.elplazas.com/Product.php?code={0}&suc={1}',
+            'base_url' : 'https://www.elplazas.com/Product.php?code={0}',
             'desc-parser': lambda page: page.find('div', {'class':'ProductName'}).text.strip(),
             'price-parser': lambda page: D((page.select('span#productprice.Moneda')[-1].text).replace(',' , '')),  # digit formatting different ,.,
         },
         'cm' : {
             'name' : 'Central Madeirense',
-            'base_url' : 'https://tucentralonline.com/{1}/producto/{0}/', # non-numeric, alpha-key
+            #'base_url' : 'https://tucentralonline.com/{1}/producto/{0}/', # non-numeric, alpha-key 
+            'base_url' : 'https://tucentralonline.com/distrito-capital-06/producto/{0}/', # non-numeric, alpha-key 
             'desc-parser': lambda page: page.select('h2.product_title')[-1].text.strip(),
             'price-parser': lambda page: convert_price('Bs', page.select('p.price bdi')[-1].text),
         },

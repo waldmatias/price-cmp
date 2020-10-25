@@ -23,7 +23,9 @@ def fetch_product_wwwpage(source, product_key, store_key):
         product = source['products'][product_key]
         pid = product['supplier_id']
         base_url = source['base_url']
-        return open_url(base_url.format(pid, store_key))
+        scrape_url = base_url.format(pid, store_key)
+        # print(f'{scrape_url}')
+        return open_url(scrape_url)
     except KeyError as e:
         log(e)
 
@@ -33,16 +35,17 @@ def fetch_product_pricing(product_key):
 
     db = get_db()
 
-    sites = [
-        ('gama', None),
-        ('plazas','1013'),
-        ('cm','distrito-capital-06'),
-        ('farmatodo', None)
-    ]
+    # create list of sites that have that product
+    sites = []
+    for site in db.keys():
+        if product_key in db[site]['products']:
+            sites.append(site)
 
-    for site, store in sites:
+    #print(f'{sites}')
+    
+    for site in sites:
         src = db[site]
-        wwwpage = fetch_product_wwwpage(src, product_key, store)
+        wwwpage = fetch_product_wwwpage(src, product_key, '') # last param = store
 
         if(wwwpage):    
             info.append([
