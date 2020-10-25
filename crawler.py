@@ -73,6 +73,7 @@ if __name__ == '__main__':
     if len(sys.argv) > 1 and sys.argv[1]:
         products_to_search = sys.argv[1].split(sep=',')
     else:
+        # load from csv file
         products_to_search = [
             #'huggies-rn',
             #'nevada-5l',
