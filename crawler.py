@@ -67,8 +67,8 @@ def print_cheapest_view(price_list):
 
 
 if __name__ == '__main__':
-    if sys.argv[1]:
-        products_to_search = [sys.argv[1]]
+    if len(sys.argv) > 1 and sys.argv[1]:
+        products_to_search = sys.argv[1].split(sep=',')
     else:
         products_to_search = [
             #'huggies-rn',
